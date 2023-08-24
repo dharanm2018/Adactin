@@ -1,9 +1,17 @@
 package Project.Adactinmvn;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.commons.collections4.functors.CatchAndRethrowClosure;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -12,7 +20,7 @@ public class Tc4 extends BaseMethodAdactin {
 
 	public static void main(String[] args) throws IOException {
 		browser("edge").get("http://adactinhotelapp.com/");
-		
+
 		Row row = getSheet("credential").getRow(0);
 		String cell1 = row.getCell(0).toString();
 		String cell2 = row.getCell(1).toString();
@@ -20,6 +28,26 @@ public class Tc4 extends BaseMethodAdactin {
 
 		Select loc = new Select(driver.findElement(By.id("location")));
 		loc.selectByVisibleText("Sydney");
+		List<WebElement> options = loc.getOptions();
+
+		File f = new File("C:\\Users\\dhara\\eclipse-workspace\\Adactinmvn\\data\\Adactin2.xlsx");
+		FileInputStream inputStream = new FileInputStream(f);
+		Workbook workbook = new XSSFWorkbook(inputStream);
+		Sheet sheet = workbook.getSheet("Sheet1");
+
+		for (WebElement w : options) {
+			int r = sheet.getPhysicalNumberOfRows();
+			Cell createCell = sheet.createRow(r).createCell(0);
+			createCell.setCellValue(w.getText());
+		}
+
+		try {
+			FileOutputStream o = new FileOutputStream(f);
+			workbook.write(o);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		Select hot = new Select(driver.findElement(By.id("hotels")));
 		hot.selectByVisibleText("Hotel Creek");
 		Select room = new Select(driver.findElement(By.id("room_type")));
@@ -55,6 +83,7 @@ public class Tc4 extends BaseMethodAdactin {
 		cvv.sendKeys(row3.getCell(7).toString());
 		book();
 		order();
+
 	}
 
 }
