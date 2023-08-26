@@ -23,8 +23,10 @@ public class Tc4 extends BaseMethodAdactin {
 
 		Row row = getSheet("credential").getRow(0);
 		String cell1 = row.getCell(0).toString();
+		userName(cell1);
 		String cell2 = row.getCell(1).toString();
-		login(cell1, cell2);
+		passWord(cell2);
+		login();
 
 		Select loc = new Select(driver.findElement(By.id("location")));
 		loc.selectByVisibleText("Sydney");
@@ -83,6 +85,7 @@ public class Tc4 extends BaseMethodAdactin {
 		cvv.sendKeys(row3.getCell(7).toString());
 		book();
 		order();
+		
 
 	}
 
